@@ -14,7 +14,7 @@ const problems = [
             "Think about how the voltage divides in a circuit with only one component",
         ],
         answer: "12",
-        image: "/api/placeholder/400/300"
+        image: "images/circuit1.png"
     },
     {
         id: 2,
@@ -26,7 +26,7 @@ const problems = [
             "Calculate the total resistance first, then find the current",
         ],
         answer: "6",
-        image: "/api/placeholder/400/300"
+        image: "images/circuit2.png"
     },
     {
         id: 3,
@@ -38,7 +38,7 @@ const problems = [
             "Remember that parallel components have the same voltage difference",
         ],
         answer: "12",
-        image: "/api/placeholder/400/300"
+        image: "images/circuit3.png"
     }
 ];
 
