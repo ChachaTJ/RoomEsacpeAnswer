@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circuit Escape Room</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="game-card" id="gameCard">
+            <div class="card-header">
+                <h1>Circuit Escape Room - Problem <span id="problemNumber">1</span></h1>
+                <div class="status-bar">
+                    <div class="hints">
+                        <span class="icon">💡</span>
+                        <span>Hints Available: <span id="hintsAvailable">0</span></span>
+                    </div>
+                    <div class="timer">
+                        <span class="icon">⏱️</span>
+                        <span id="timeLeft">7:00</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-content">
+                <img id="circuitImage" src="/api/placeholder/400/300" alt="Circuit diagram" class="circuit-image">
+                
+                <div class="problem-content">
+                    <h3 id="question"></h3>
+                    <p id="description" class="description"></p>
+                </div>
+
+                <div id="hintAlert" class="alert hint-alert hidden">
+                    <span class="icon">💡</span>
+                    <span id="hintText"></span>
+                </div>
+
+                <div class="input-group">
+                    <input type="number" id="answerInput" placeholder="Enter your answer (V)" class="answer-input">
+                    <button id="submitBtn" class="submit-btn">Submit</button>
+                    <button id="hintBtn" class="hint-btn">Need Hint</button>
+                </div>
+
+                <div id="correctAlert" class="alert success-alert hidden">
+                    <span>Correct! Moving to next problem...</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="successCard" class="success-card hidden">
+            <h2>🏆 Escape Successful!</h2>
+            <div class="results-grid">
+                <div class="result-box">
+                    <h3>Time Record</h3>
+                    <p>Time Used: <span id="timeUsed">0:00</span></p>
+                    <p>Time Remaining: <span id="timeRemaining">0:00</span></p>
+                </div>
+                <div class="result-box">
+                    <h3>Hint Usage</h3>
+                    <p>Total Hints Used: <span id="totalHints">0</span></p>
+                    <ul id="hintsList"></ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameOverAlert" class="game-over-alert hidden">
+            <span>⚠️ Time's up! Try again to escape the room.</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
