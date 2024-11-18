@@ -298,6 +298,19 @@ body {
     margin-top: 10px;
 }
 
+/* answer-input.shake 스타일 수정 */
+.answer-input.shake {
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+    border-color: #ff4444;
+    background-color: #fff5f5;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
 /* 리뷰 섹션 스타일 */
 .review-section {
     margin-top: 30px;
