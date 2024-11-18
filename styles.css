@@ -230,6 +230,7 @@ body {
     box-shadow: 2px 0 15px rgba(0, 0, 0, 0.5);
 }
 
+
 .door-text {
     color: white;
     font-size: 32px;
@@ -384,4 +385,152 @@ body {
     .problem-review-content {
         grid-template-columns: 1fr;
     }
+}
+
+/* 폭죽 애니메이션 */
+.fireworks {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.success-alert.final .fireworks {
+    opacity: 1;
+}
+
+.firework {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    animation: explode 1s ease-out forwards;
+}
+
+.firework:nth-child(1) { 
+    left: 30%; top: 40%; 
+    background: #ff0000; 
+    animation-delay: 0.2s;
+}
+.firework:nth-child(2) { 
+    left: 60%; top: 30%; 
+    background: #00ff00; 
+    animation-delay: 0.4s;
+}
+.firework:nth-child(3) { 
+    left: 45%; top: 50%; 
+    background: #0000ff; 
+    animation-delay: 0.6s;
+}
+.firework:nth-child(4) { 
+    left: 70%; top: 45%; 
+    background: #ffff00; 
+    animation-delay: 0.8s;
+}
+.firework:nth-child(5) { 
+    left: 20%; top: 35%; 
+    background: #ff00ff; 
+    animation-delay: 1s;
+}
+
+@keyframes explode {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(15);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(30);
+        opacity: 0;
+    }
+}
+
+/* 밝은 빛 효과 */
+.final-light {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    opacity: 0;
+    transition: opacity 2s ease;
+    pointer-events: none;
+}
+
+.success-alert.final .final-light {
+    animation: finalEscape 3s ease-in forwards;
+}
+
+@keyframes finalEscape {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* 빛나는 문 효과 */
+.light-beam {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    opacity: 0.5; /* 기본 밝기 유지 */
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.success-alert.show-animation .light-beam {
+    animation: lightBeam 2s ease-in-out;
+}
+
+.success-alert.final .light-beam {
+    animation: finalLightBeam 2s ease-in-out forwards;
+}
+
+@keyframes lightBeam {
+    0% {
+        opacity: 0.5; /* 기본 밝기 유지 */
+    }
+    50% {
+        opacity: 1; /* 최대 밝기 */
+    }
+    100% {
+        opacity: 0.5; /* 기본 밝기 유지 */
+    }
+}
+
+@keyframes finalLightBeam {
+    0% {
+        opacity: 0.5; /* 기본 밝기 유지 */
+    }
+    50% {
+        opacity: 1; /* 최대 밝기 */
+    }
+    100% {
+        opacity: 0.5; /* 기본 밝기 유지 */
+    }
+}
+
+/* 마지막 문제의 문 애니메이션 수정 */
+.success-alert.final .door-front {
+    transform: rotateY(-180deg) !important;
+    transition: transform 2s ease !important;
+    background: linear-gradient(45deg, #4a5568, #2d3748);
+}
+
+.success-alert.final .door-text {
+    color: #ffd700;
+    font-size: 36px;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }

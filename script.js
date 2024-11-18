@@ -212,67 +212,70 @@ function showSuccess() {
 }
 
 function handleSubmit() {
-   const problem = problems[currentProblem];
-   let isCorrect = false;
+    const problem = problems[currentProblem];
+    let isCorrect = false;
 
-   if (problem.inputType === 'single') {
-       const answer = document.getElementById('singleAnswer').value;
-       isCorrect = answer === problem.answer;
-   } else if (problem.inputType === 'fraction') {
-       const numerator = document.getElementById('numeratorAnswer').value;
-       const denominator = document.getElementById('denominatorAnswer').value;
-       isCorrect = numerator === problem.answer.numerator && 
-                  denominator === problem.answer.denominator;
-   }
+    if (problem.inputType === 'single') {
+        const answer = document.getElementById('singleAnswer').value;
+        isCorrect = answer === problem.answer;
+    } else if (problem.inputType === 'fraction') {
+        const numerator = document.getElementById('numeratorAnswer').value;
+        const denominator = document.getElementById('denominatorAnswer').value;
+        isCorrect = numerator === problem.answer.numerator && 
+                   denominator === problem.answer.denominator;
+    }
 
-   if (isCorrect) {
-       const correctAlert = elements.correctAlert;
-       correctAlert.setAttribute('data-problem', problem.id);
-       
-       // 문제 번호 업데이트
-       document.getElementById('solvedProblemNumber').textContent = problem.id;
-       
-       if (currentProblem === problems.length - 1) {
-           correctAlert.classList.add('final');
-       }
-
-       // 애니메이션 표시
-       correctAlert.classList.remove('hidden');
-       correctAlert.classList.add('visible');
-       
-       setTimeout(() => {
-           correctAlert.classList.add('show-animation');
-           
-           setTimeout(() => {
-               // 애니메이션 숨기기
-               correctAlert.classList.remove('show-animation', 'visible');
-               correctAlert.classList.add('hidden');
-               
-               if (currentProblem === problems.length - 1) {
-                   showSuccess();
-               } else {
-                   currentProblem++;
-                   updateProblemDisplay();
-               }
-           }, 3000); // 3초 동안 표시
-       }, 100);
-
-   } else {
-       // Wrong answer feedback
-       const inputs = problem.inputType === 'single' 
-           ? [document.getElementById('singleAnswer')]
-           : [document.getElementById('numeratorAnswer'), 
-              document.getElementById('denominatorAnswer')];
-       
-       inputs.forEach(input => input.classList.add('shake'));
-       
-       timeLeft = Math.max(0, timeLeft - 10); // Penalty: -10 seconds
-       updateTimerDisplay();
-       
-       setTimeout(() => {
-           inputs.forEach(input => input.classList.remove('shake'));
-       }, 820);
-   }
+    if (isCorrect) {
+        const correctAlert = elements.correctAlert;
+        correctAlert.setAttribute('data-problem', problem.id);
+        
+        document.getElementById('solvedProblemNumber').textContent = problem.id;
+        
+        // 마지막 문제(2-2)인 경우 
+        if (problem.id === "2-2") {
+            correctAlert.classList.add('final');
+            correctAlert.querySelector('.door-text').textContent = 'ESCAPED!';
+        }
+    
+        correctAlert.classList.remove('hidden');
+        correctAlert.classList.add('visible');
+        
+        setTimeout(() => {
+            correctAlert.classList.add('show-animation');
+            
+            if (problem.id === "2-2") {
+                // 마지막 문제는 더 오래 보여주고, 폭죽과 빛 효과가 충분히 보이도록 함
+                setTimeout(() => {
+                    correctAlert.classList.remove('show-animation', 'visible');
+                    correctAlert.classList.add('hidden');
+                    showSuccess();
+                }, 3000); // 4초로 늘림
+            } else {
+                setTimeout(() => {
+                    correctAlert.classList.remove('show-animation', 'visible');
+                    correctAlert.classList.add('hidden');
+                    currentProblem++;
+                    updateProblemDisplay();
+                }, 3000);
+            }
+        }, 100);
+    
+    } else {
+        // Wrong answer feedback
+        const inputs = problem.inputType === 'single' 
+            ? [document.getElementById('singleAnswer')]
+            : [document.getElementById('numeratorAnswer'), 
+               document.getElementById('denominatorAnswer')];
+        
+        inputs.forEach(input => input.classList.add('shake'));
+        
+        timeLeft = Math.max(0, timeLeft - 10); // Penalty: -10 seconds
+        updateTimerDisplay();
+        
+        setTimeout(() => {
+            inputs.forEach(input => input.classList.remove('shake'));
+        }, 820);
+    }
 }
 
 function handleHint() {
