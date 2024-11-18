@@ -10,7 +10,7 @@
     <div class="container">
         <div class="game-card" id="gameCard">
             <div class="card-header">
-                <h1>Circuit Escape Room - Problem <span id="problemNumber">1</span></h1>
+                <h1>Circuit Escape Room - Problem <span id="problemNumber">1-1</span></h1>
                 <div class="status-bar">
                     <div class="hints">
                         <span class="icon">💡</span>
@@ -23,27 +23,55 @@
                 </div>
             </div>
             <div class="card-content">
-                <img id="circuitImage" src="/api/placeholder/400/300" alt="Circuit diagram" class="circuit-image">
+                <img id="circuitImage" src="images/circuit1.png" alt="Circuit diagram" class="circuit-image">
                 
                 <div class="problem-content">
                     <h3 id="question"></h3>
                     <p id="description" class="description"></p>
                 </div>
 
-                <div id="hintAlert" class="alert hint-alert hidden">
-                    <span class="icon">💡</span>
-                    <span id="hintText"></span>
+                <div id="hintAlert" class="hint-alerts">
+                    <div id="hintsList" class="hints-list">
+                        <!-- 힌트들이 여기에 추가됩니다 -->
+                    </div>
                 </div>
 
                 <div class="input-group">
-                    <input type="number" id="answerInput" placeholder="Enter your answer (V)" class="answer-input">
-                    <button id="submitBtn" class="submit-btn">Submit</button>
-                    <button id="hintBtn" class="hint-btn">Need Hint</button>
+                    <div class="answers-container">
+                        <!-- Single number input -->
+                        <div class="answer-input-group" id="singleInput">
+                            <label id="answerLabel">Total Resistance (Ω):</label>
+                            <input type="number" id="singleAnswer" placeholder="Enter your answer" class="answer-input">
+                        </div>
+                        
+                        <!-- Fraction input -->
+                        <div class="answer-input-group" id="fractionInput" style="display: none;">
+                            <label id="fractionLabel">Total Resistance (Ω):</label>
+                            <div class="fraction-input">
+                                <input type="number" id="numeratorAnswer" placeholder="numerator" class="answer-input small">
+                                <div class="fraction-line"></div>
+                                <input type="number" id="denominatorAnswer" placeholder="denominator" class="answer-input small">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button id="submitBtn" class="submit-btn">Submit</button>
+                        <div class="hint-section">
+                            <button id="hintBtn" class="hint-btn">Need Hint</button>
+                            <span id="hintTimeDisplay" class="hint-time"></span>
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </div>
 
-                <div id="correctAlert" class="alert success-alert hidden">
-                    <span>Correct! Moving to next problem...</span>
+        <div id="correctAlert" class="success-alert hidden">
+            <div class="door-animation">
+                <div class="problem-number">Problem <span id="solvedProblemNumber">1-1</span></div>
+                <div class="door">
+                    <div class="door-front"></div>
                 </div>
+                <div class="door-text">Problem Solved!</div>
             </div>
         </div>
 
@@ -59,6 +87,13 @@
                     <h3>Hint Usage</h3>
                     <p>Total Hints Used: <span id="totalHints">0</span></p>
                     <ul id="hintsList"></ul>
+                </div>
+            </div>
+            
+            <div class="review-section">
+                <h3>Problem Review</h3>
+                <div class="problem-review-list" id="problemReviewList">
+                    <!-- 문제 리뷰가 여기에 추가됩니다 -->
                 </div>
             </div>
         </div>
