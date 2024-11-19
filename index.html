@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+    <div class="title-screen" id="titleScreen">
+        <h1 class="title">CIRCUIT ESCAPE ROOM</h1>
+        <button class="start-btn" onclick="startGame()">START MISSION</button>
+    </div>
+
+    <div class="electricity left"></div>
+    <div class="electricity right"></div>
+     
     <div class="container">
         <div class="game-card" id="gameCard">
             <div class="card-header">
@@ -86,7 +95,7 @@
 </div>
 
         <div id="successCard" class="success-card hidden">
-            <h2>🏆 Escape Successful!</h2>
+            <h2>🏆 Escape Successful!🏆</h2>
             <div class="results-grid">
                 <div class="result-box">
                     <h3>Time Record</h3>
@@ -113,6 +122,17 @@
         </div>
     </div>
 
+    <div id="extraTimeAlert" class="success-alert hidden">
+        <div class="door-animation">
+            <div class="problem-number">
+                Extra Time Given!
+            </div>
+            <div class="door-text">
+                You have 3 more minutes!
+            </div>
+        </div>
+    </div>
+    
     <script src="script.js"></script>
 </body>
 </html>

@@ -2,6 +2,70 @@
 const TOTAL_TIME = 420; // 7 minutes in seconds
 const HINT_INTERVAL = 20; // Show new hint every 20 seconds
 
+// 전기 효과 관련 함수
+function createSparks() {
+    const electricityElements = document.querySelectorAll('.electricity');
+    
+    
+    electricityElements.forEach(el => {
+        // 기존 스파크 제거
+        el.innerHTML = '';
+        
+        for(let i = 0; i < 5; i++) {
+            const spark = document.createElement('div');
+            spark.className = 'spark';
+            spark.style.left = Math.random() * 100 + '%';
+            spark.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+            spark.style.animationDelay = (Math.random() * 2) + 's';
+            el.appendChild(spark);
+        }
+    });
+}
+
+function createLightningEffect() {
+    const electricityElements = document.querySelectorAll('.electricity');
+    
+    electricityElements.forEach(el => {
+        // Clear existing effects
+        el.innerHTML = '';
+        
+        // Create main lightning bolt
+        const lightning = document.createElement('div');
+        lightning.className = 'lightning';
+        lightning.style.left = Math.random() * 80 + '%';
+        el.appendChild(lightning);
+
+        // Create lightning branches
+        const branchCount = Math.floor(Math.random() * 3) + 2;
+        for(let i = 0; i < branchCount; i++) {
+            const branch = document.createElement('div');
+            branch.className = 'lightning-branch';
+            branch.style.left = Math.random() * 80 + '%';
+            branch.style.top = (Math.random() * 60 + 20) + '%';
+            branch.style.transform = `rotate(${Math.random() * 60 - 30}deg)`;
+            el.appendChild(branch);
+        }
+
+        // Create sparks
+        const sparkCount = Math.floor(Math.random() * 4) + 3;
+        for(let i = 0; i < sparkCount; i++) {
+            const spark = document.createElement('div');
+            spark.className = 'spark';
+            spark.style.left = Math.random() * 100 + '%';
+            spark.style.top = Math.random() * 100 + '%';
+            spark.style.animationDuration = (Math.random() * 0.5 + 0.3) + 's';
+            spark.style.animationDelay = (Math.random() * 0.5) + 's';
+            el.appendChild(spark);
+        }
+    });
+}
+
+createSparks();
+    setInterval(createSparks, 2000);
+
+createLightningEffect();
+    setInterval(createLightningEffect, 1500);
+
 // Game data
 const problems = [
    {
@@ -68,6 +132,7 @@ let problemTimers = [0, 0, 0, 0];  // 4 problems now
 let hintsUsed = [0, 0, 0, 0];      // 4 problems now
 let gameInterval;
 let isGameOver = false;
+let hasShownExtraTimeAlert = false;
 
 // DOM Elements
 const elements = {
@@ -92,10 +157,12 @@ const elements = {
 
 // Helper Functions
 function formatTime(seconds) {
-   const minutes = Math.floor(seconds / 60);
-   const remainingSeconds = seconds % 60;
-   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-}
+    const isNegative = seconds < 0;
+    const absSeconds = Math.abs(seconds);
+    const minutes = Math.floor(absSeconds / 60);
+    const remainingSeconds = absSeconds % 60;
+    return `${isNegative ? '-' : ''}${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+ }
 
 function updateTimerDisplay() {
    elements.timeLeft.textContent = formatTime(timeLeft);
@@ -170,6 +237,9 @@ function showSuccess() {
    elements.timeUsed.textContent = formatTime(timeUsed);
    elements.timeRemaining.textContent = formatTime(timeLeft);
    elements.totalHints.textContent = totalHintsUsed;
+
+
+   
    
    // 문제 리뷰 생성
    const reviewList = document.getElementById('problemReviewList');
@@ -235,10 +305,11 @@ function handleSubmit() {
         if (problem.id === "2-2") {
             correctAlert.classList.add('final');
             correctAlert.querySelector('.door-text').textContent = 'ESCAPED!';
+            
         }
-    
-        correctAlert.classList.remove('hidden');
+        
         correctAlert.classList.add('visible');
+        correctAlert.classList.remove('hidden');
         
         setTimeout(() => {
             correctAlert.classList.add('show-animation');
@@ -248,6 +319,7 @@ function handleSubmit() {
                 setTimeout(() => {
                     correctAlert.classList.remove('show-animation', 'visible');
                     correctAlert.classList.add('hidden');
+                    elements.gameCard.style.display = 'none';
                     showSuccess();
                 }, 3000); // 4초로 늘림
             } else {
@@ -278,6 +350,7 @@ function handleSubmit() {
     }
 }
 
+
 function handleHint() {
    const availableHints = getAvailableHints();
    if (hintsUsed[currentProblem] < availableHints) {
@@ -307,37 +380,92 @@ function handleHint() {
 
 // Game initialization
 function initGame() {
-   updateProblemDisplay();
-   updateTimerDisplay();
-   
-   gameInterval = setInterval(() => {
-       if (timeLeft <= 0) {
-           showGameOver();
-           return;
-       }
-       
-       timeLeft--;
-       problemTimers[currentProblem]++;
-       updateTimerDisplay();
-       updateHintTimeDisplay();
-       elements.hintsAvailable.textContent = getAvailableHints() - hintsUsed[currentProblem];
-   }, 1000);
-   
-   // Event Listeners
-   elements.submitBtn.addEventListener('click', handleSubmit);
-   elements.hintBtn.addEventListener('click', handleHint);
-   
-   // Enter key functionality
-   document.getElementById('singleAnswer').addEventListener('keypress', (e) => {
-       if (e.key === 'Enter') handleSubmit();
-   });
-   document.getElementById('numeratorAnswer').addEventListener('keypress', (e) => {
-       if (e.key === 'Enter') handleSubmit();
-   });
-   document.getElementById('denominatorAnswer').addEventListener('keypress', (e) => {
-       if (e.key === 'Enter') handleSubmit();
-   });
+    updateProblemDisplay();
+    updateTimerDisplay();
+    
+    gameInterval = setInterval(() => {
+        if (timeLeft <= -180) {
+            showGameOver();
+            return;
+        }
+        
+        // 0초가 되었을 때 추가 시간 알림
+        if (timeLeft === 0 && !hasShownExtraTimeAlert) {
+            showExtraTimeAlert();
+        }
+        
+        timeLeft--;
+        problemTimers[currentProblem]++;
+        updateTimerDisplay();
+        updateHintTimeDisplay();
+        elements.hintsAvailable.textContent = getAvailableHints() - hintsUsed[currentProblem];
+    }, 1000);
+    
+    // Event Listeners
+    elements.submitBtn.addEventListener('click', handleSubmit);
+    elements.hintBtn.addEventListener('click', handleHint);
+    
+    // Enter key functionality
+    document.getElementById('singleAnswer').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleSubmit();
+    });
+    document.getElementById('numeratorAnswer').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleSubmit();
+    });
+    document.getElementById('denominatorAnswer').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleSubmit();
+    });
+ }
+
+
+function showExtraTimeAlert() {
+    hasShownExtraTimeAlert = true;
+    const extraTimeAlert = document.getElementById('extraTimeAlert');
+    extraTimeAlert.classList.remove('hidden');
+    extraTimeAlert.classList.add('visible');
+    
+    setTimeout(() => {
+        extraTimeAlert.classList.add('show-animation');
+        
+        // 3초 후에 알림 닫기
+        setTimeout(() => {
+            extraTimeAlert.classList.remove('show-animation', 'visible');
+            extraTimeAlert.classList.add('hidden');
+        }, 3000);
+    }, 100);
+}
+// Start the game
+function startGame() {
+    document.getElementById('titleScreen').style.display = 'none';
+    document.getElementById('gameCard').style.display = 'block';  // 게임 카드 보이기
+    initGame();  // 게임 초기화 및 시작
 }
 
-// Start the game
-initGame();
+// DOM이 로드되면 게임 요소들 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    // DOM Elements 재할당
+    elements.problemNumber = document.getElementById('problemNumber');
+    elements.hintsAvailable = document.getElementById('hintsAvailable');
+    elements.timeLeft = document.getElementById('timeLeft');
+    elements.circuitImage = document.getElementById('circuitImage');
+    elements.question = document.getElementById('question');
+    elements.description = document.getElementById('description');
+    elements.hintsList = document.getElementById('hintsList');
+    elements.submitBtn = document.getElementById('submitBtn');
+    elements.hintBtn = document.getElementById('hintBtn');
+    elements.correctAlert = document.getElementById('correctAlert');
+    elements.successCard = document.getElementById('successCard');
+    elements.gameOverAlert = document.getElementById('gameOverAlert');
+    elements.gameCard = document.getElementById('gameCard');
+    elements.timeUsed = document.getElementById('timeUsed');
+    elements.timeRemaining = document.getElementById('timeRemaining');
+    elements.totalHints = document.getElementById('totalHints');
+    elements.hintTimeDisplay = document.getElementById('hintTimeDisplay');
+    elements.extraTimeAlert = document.getElementById('extraTimeAlert'); 
+
+    // 시작 화면만 보이고 게임 카드는 숨기기
+    document.getElementById('gameCard').style.display = 'none';
+});
+
+
+
